@@ -1,8 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { TreeModule } from 'angular-tree-component';
+
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
+import { TreeModule as Ng2TreeModule } from 'ng2-tree';
 
 
 @NgModule({
@@ -12,7 +13,7 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     FormsModule,
-    TreeModule
+    Ng2TreeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

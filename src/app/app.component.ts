@@ -24,7 +24,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     console.log(this.tree);
-    this.code = 'let x: string  = \'string\'';
+    this.code =
+`let x: string  = 'string';
+if (true) { return false; }`;
     this.initTree();
   }
 
@@ -65,6 +67,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     delete this.selectedNode.declarations;
     delete this.selectedNode.type;
     delete this.selectedNode.expression;
+    delete this.selectedNode.thenStatement;
+    delete this.selectedNode.statements;
     this.selectedNode.kind = ts.SyntaxKind[this.selectedNode.kind];
     this.createSelection(this.selectedNode.pos, this.selectedNode.end);
   }

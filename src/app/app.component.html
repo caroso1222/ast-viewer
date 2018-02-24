@@ -1,15 +1,17 @@
-<textarea [(ngModel)]="code"
-          rows="10"
-          #textarea
-          (keyup)="initTree()"
-          class="editor">
 
-</textarea>
 <div class="row">
+  <div class="col-4">
+    <textarea [(ngModel)]="code"
+      rows="10"
+      #textarea
+      (keyup)="initTree()"
+      class="editor">
+    </textarea>
+  </div>
   <div class="col-6">
     <tree [tree]="nodes" (nodeSelected)="logEvent($event)"></tree>
   </div>
-  <div class="col-6">
+  <div class="col-2">
     {{ selectedNode | json }}
   </div>
 </div>

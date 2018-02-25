@@ -30,6 +30,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   selectedNode: any = {};
 
+  cachedLinesLength = [];
+
+  editor;
+
+  decorations = [];
+
   ngOnInit() {
     console.log(this.tree);
     this.code =
@@ -73,15 +79,17 @@ export class AppComponent  {
   }
 
   initTree(code) {
-    console.log(code);
+    this.cacheLines();
     const a = ts.createSourceFile('_.ts', code, ts.ScriptTarget.Latest, /*setParentNodes */ true);
     this.nodes = this.visit(a);
   }
 
+  cacheLines() {
+    this.cachedLinesLength = this.code.split('\n').map(l => l.length + 1);
+  }
+
   logEvent(evt) {
-    console.log(evt);
     this.selectedNode = this.nodeList[evt.node.id];
-    console.log(this.selectedNode);
     delete this.selectedNode.parent;
     delete this.selectedNode._children;
     delete this.selectedNode.name;
@@ -97,22 +105,45 @@ export class AppComponent  {
   }
 
   onExtendedChange(evt) {
-    console.log(evt.target.checked);
     this.initTree(this.code);
   }
 
   createSelection(start, end) {
-    console.log(start, end);
+    console.log({start, end});
+    const [initRow, initCol] = this.getLineCol(start);
+    const [endRow, endCol] = this.getLineCol(end);
+    // console.log({initRow, initCol});
+    this.selectText(initRow, initCol, endRow, endCol);
+  }
+
+  getLineCol(pos) {
+    console.log(this.cachedLinesLength);
+    for (let i = 0; i < this.cachedLinesLength.length; i++) {
+      if (this.cachedLinesLength[i] > pos) {
+        return [i + 1, pos + 1];
+      }
+      pos -= this.cachedLinesLength[i];
+    }
   }
 
   onEditorInit(editor: any) {
+    this.editor = editor;
     (window as any).monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
       noSemanticValidation: true,
       noSyntaxValidation: true
     });
-    console.log(editor);
-    editor.deltaDecorations([], [
-      { range: new (window as any).monaco.Range(5, 7, 6, 10), options: { inlineClassName: 'myInlineDecoration' }},
+    this.selectText(5, 7, 6, 10);
+  }
+
+  selectText(initRow, initCol, endRow, endCol) {
+    console.log({initRow, initCol, endRow, endCol});
+    this.decorations = this.editor.deltaDecorations(this.decorations, [
+      {
+        range: new (window as any).monaco.Range(initRow, initCol, endRow, endCol),
+        options: {
+          inlineClassName: 'myInlineDecoration'
+        }
+      },
     ]);
   }
 }

@@ -7,7 +7,9 @@
                         [(ngModel)]="code"></ngx-monaco-editor>
   </div>
   <div class="col-6">
-    <tree [tree]="nodes" (nodeSelected)="logEvent($event)"></tree>
+    <tree [tree]="nodes"
+          (nodeSelected)="logEvent($event)"
+          (nodeHovered)="logEvent($event)"></tree>
   </div>
   <div class="col-2">
     

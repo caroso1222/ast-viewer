@@ -46,6 +46,7 @@ import { get, isNil } from './utils/fn.utils';
         <div class="node-value"
           *ngIf="!shouldShowInputForTreeValue()"
           [class.node-selected]="isSelected"
+          (mouseenter)="onNodeHovered($event)"
           (click)="onNodeSelected($event)">
             <div *ngIf="tree.nodeTemplate" class="node-template" [innerHTML]="tree.nodeTemplate | safeHtml"></div>
             <span *ngIf="!template" class="node-name" [innerHTML]="tree.value | safeHtml"></span>
@@ -191,6 +192,10 @@ export class TreeInternalComponent implements OnInit, OnChanges, OnDestroy, Afte
       this.isSelected = true;
       this.treeService.fireNodeSelected(this.tree);
     }
+  }
+
+  public onNodeHovered(e: { button: number }): void {
+    this.treeService.fireNodeHovered(this.tree);
   }
 
   public onNodeUnselected(e: { button: number }): void {

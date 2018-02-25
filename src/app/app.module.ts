@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { TreeModule as Ng2TreeModule } from 'ng2-tree';
+import { TreeModule as Ng2TreeModule } from '../shared/tree/tree.module';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 
 

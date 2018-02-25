@@ -109,15 +109,12 @@ export class AppComponent  {
   }
 
   createSelection(start, end) {
-    console.log({start, end});
     const [initRow, initCol] = this.getLineCol(start);
     const [endRow, endCol] = this.getLineCol(end);
-    // console.log({initRow, initCol});
     this.selectText(initRow, initCol, endRow, endCol);
   }
 
   getLineCol(pos) {
-    console.log(this.cachedLinesLength);
     for (let i = 0; i < this.cachedLinesLength.length; i++) {
       if (this.cachedLinesLength[i] > pos) {
         return [i + 1, pos + 1];
@@ -136,7 +133,6 @@ export class AppComponent  {
   }
 
   selectText(initRow, initCol, endRow, endCol) {
-    console.log({initRow, initCol, endRow, endCol});
     this.decorations = this.editor.deltaDecorations(this.decorations, [
       {
         range: new (window as any).monaco.Range(initRow, initCol, endRow, endCol),

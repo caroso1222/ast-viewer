@@ -11,7 +11,8 @@ import {
   NodeRenamedEvent,
   NodeSelectedEvent,
   NodeUncheckedEvent,
-  NodeUnselectedEvent
+  NodeUnselectedEvent,
+  NodeHoveredEvent
 } from './tree.events';
 import { RenamableNode } from './tree.types';
 import { Tree } from './tree';
@@ -60,6 +61,10 @@ export class TreeService {
 
   public fireNodeSelected(tree: Tree): void {
     this.nodeSelected$.next(new NodeSelectedEvent(tree));
+  }
+
+  public fireNodeHovered(tree: Tree): void {
+    this.nodeHovered$.next(new NodeHoveredEvent(tree));
   }
 
   public fireNodeUnselected(tree: Tree): void {

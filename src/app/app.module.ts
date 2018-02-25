@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { TreeModule as Ng2TreeModule } from 'ng2-tree';
+import { MonacoEditorModule } from 'ngx-monaco-editor';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { TreeModule as Ng2TreeModule } from 'ng2-tree';
   imports: [
     BrowserModule,
     FormsModule,
-    Ng2TreeModule
+    Ng2TreeModule,
+    MonacoEditorModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

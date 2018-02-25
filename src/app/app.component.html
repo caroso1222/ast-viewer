@@ -1,18 +1,20 @@
 
 <div class="row">
   <div class="col-4">
-    <textarea [(ngModel)]="code"
-      rows="10"
-      #textarea
-      (keyup)="initTree()"
-      class="editor">
-    </textarea>
+      <ngx-monaco-editor [options]="editorOptions"
+                        (ngModelChange)="initTree($event)"
+                        (onInit)="onEditorInit($event)"
+                        [(ngModel)]="code"></ngx-monaco-editor>
   </div>
   <div class="col-6">
     <tree [tree]="nodes" (nodeSelected)="logEvent($event)"></tree>
   </div>
   <div class="col-2">
-    {{ selectedNode | json }}
+    
+    <label>
+      <input type="checkbox" [(ngModel)]="extended"
+          (change)="onExtendedChange($event)"> Extended
+    </label>
   </div>
 </div>
 <!-- <tree-root [nodes]="nodes" #tree></tree-root> -->

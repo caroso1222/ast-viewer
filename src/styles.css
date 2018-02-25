@@ -1,2 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~angular-tree-component/dist/angular-tree-component.css';
+
+.myInlineDecoration {
+  background: rgba(230, 49, 49, 0.44);
+  border-radius: 2px;
+}

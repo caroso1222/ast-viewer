@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, ViewEncapsulation, HostBinding } from '@angular/core';
 import * as ts from 'typescript';
+import * as _ts from 'typescript-compiler';
+// import { isStartOfExpression } from 'typescript';
 
 @Component({
   selector: 'code-node',
@@ -27,6 +29,9 @@ export class CodeNodeComponent implements OnInit {
       this.children.push(_node);
     });
     this._isLeaf = this.isLeaf(this.node);
+    if (this.node) {
+      console.log(this.node, this.getNodeText());
+    }
   }
 
   isLeaf(node) {
@@ -39,6 +44,16 @@ export class CodeNodeComponent implements OnInit {
 
   getNumNewLines() {
     return this.node.getFullText().match(/\n/g) || [];
+  }
+
+  getClass() {
+    if (ts.isStringLiteral(this.node)) {
+      return 'mtk5';
+    } else if (this.node.kind >= 72 && this.node.kind <= 142) {
+      return 'mtk8';
+    } else {
+      return 'mtk1';
+    }
   }
 
 }

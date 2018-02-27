@@ -1,7 +1,7 @@
 <ng-container *ngIf="isLeaf()">
   <br *ngFor="let newLine of getNumNewLines()">
-  <pre><code>{{getNodeText()}}</code></pre>
+  <pre><code [class]="getClass()">{{getNodeText()}}</code></pre>
 </ng-container>
 <ng-container *ngIf="!isLeaf()">
-  <code-node [node]="node" *ngFor="let node of children"></code-node>
+  <code-node [node]="node" *ngFor="let node of children"></code-node><!-- --> 
 </ng-container>

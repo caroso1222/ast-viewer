@@ -27,6 +27,7 @@
     "ng2-tree": "^2.0.0-rc.9",
     "ngx-monaco-editor": "^4.0.1",
     "rxjs": "^5.5.6",
+    "typescript-compiler": "^1.4.1-2",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {

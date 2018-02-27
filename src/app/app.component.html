@@ -5,7 +5,10 @@
                         (ngModelChange)="initTree($event)"
                         (onInit)="onEditorInit($event)"
                         [(ngModel)]="code"></ngx-monaco-editor>
-      <code-node [node]="rootNode"></code-node>
+      
+      <div class="interactive-wrapper">
+        <code-node [node]="rootNode"></code-node>
+      </div>                  
   </div>
   <div class="col-xs-5 tree-wrapper">
     <tree [tree]="nodes"

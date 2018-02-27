@@ -50,6 +50,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 })
 export class AppComponent  {
   name = 'Angular 5';
+
+  ngOnInit() {
+    let a = 2;
+  }
 }
 `;
     this.initTree(this.code);

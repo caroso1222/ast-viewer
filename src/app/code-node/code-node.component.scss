@@ -4,9 +4,22 @@
 
 .code-node {
   cursor: pointer;
+  font-family: Menlo, Monaco, "Courier New", monospace;
+  code {
+
+  font-family: Menlo, Monaco, "Courier New", monospace;
+  font-size: 12px;
+  display: inline-block;
+  }
+  &--leaf {
+    height: inherit;
+    margin-right: -9px;
+  } 
   // border: 1px solid transparent;
   &.code-node--leaf:hover {
-    background: rgba(230, 49, 49, 0.44);
+    code {
+      background: rgba(230, 49, 49, 0.44);
+    }
     // border: 1px solid red;
   }
 }

@@ -53,6 +53,10 @@ export class AppComponent  {
 
   ngOnInit() {
     let a = 2;
+    if (a < 10) {
+      this.sendData(a);
+      window.alert();
+    }
   }
 }
 `;

@@ -51,6 +51,8 @@ export class CodeNodeComponent implements OnInit {
       return 'mtk5';
     } else if (this.node.kind >= 72 && this.node.kind <= 142) {
       return 'mtk8';
+    } else if (ts.isNumericLiteral(this.node)) {
+      return 'mtk6';
     } else {
       return 'mtk1';
     }

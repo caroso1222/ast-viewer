@@ -5,7 +5,7 @@ import { TreeNode } from 'angular-tree-component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'app';
@@ -35,6 +35,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   editor;
 
   decorations = [];
+
+  rootNode;
 
   ngOnInit() {
     console.log(this.tree);
@@ -81,6 +83,7 @@ export class AppComponent  {
   initTree(code) {
     this.cacheLines();
     const a = ts.createSourceFile('_.ts', code, ts.ScriptTarget.Latest, /*setParentNodes */ true);
+    this.rootNode = a;
     this.nodes = this.visit(a);
   }
 
@@ -90,17 +93,17 @@ export class AppComponent  {
 
   logEvent(evt) {
     this.selectedNode = this.nodeList[evt.node.id];
-    delete this.selectedNode.parent;
-    delete this.selectedNode._children;
-    delete this.selectedNode.name;
-    delete this.selectedNode.initializer;
-    delete this.selectedNode.declarations;
-    delete this.selectedNode.type;
-    delete this.selectedNode.expression;
-    delete this.selectedNode.thenStatement;
-    delete this.selectedNode.statements;
-    delete this.selectedNode.declarationList;
-    this.selectedNode.kind = ts.SyntaxKind[this.selectedNode.kind];
+    // delete this.selectedNode.parent;
+    // delete this.selectedNode._children;
+    // delete this.selectedNode.name;
+    // delete this.selectedNode.initializer;
+    // delete this.selectedNode.declarations;
+    // delete this.selectedNode.type;
+    // delete this.selectedNode.expression;
+    // delete this.selectedNode.thenStatement;
+    // delete this.selectedNode.statements;
+    // delete this.selectedNode.declarationList;
+    // this.selectedNode.kind = ts.SyntaxKind[this.selectedNode.kind];
     this.createSelection(this.selectedNode.pos, this.selectedNode.end);
   }
 
@@ -149,3 +152,5 @@ interface ASTNode {
   children?: ASTNode[];
   id: number;
 }
+
+// http://mbostock.github.io/d3/talk/20110921/#21

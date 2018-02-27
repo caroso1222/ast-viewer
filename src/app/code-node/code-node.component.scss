@@ -1,0 +1,12 @@
+:host {
+  display: inline;
+}
+
+.code-node {
+  cursor: pointer;
+  // border: 1px solid transparent;
+  &.code-node--leaf:hover {
+    background: rgba(red, 0.1);
+    // border: 1px solid red;
+  }
+}

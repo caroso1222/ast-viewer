@@ -7,10 +7,15 @@
                         [(ngModel)]="code"></ngx-monaco-editor>
       
       <div class="interactive-wrapper">
+        <div class="code-numbers">
+          <span class="code-number" *ngFor="let num of cachedLinesLength; index as index">
+            {{index + 1}}
+          </span>
+        </div>
         <code-node [node]="rootNode"></code-node>
       </div>                  
   </div>
-  <div class="col-xs-5 tree-wrapper">
+  <div class="col-xs-5 tree-wrapper" #treeWrapper>
     <tree [tree]="nodes"
           #tree
           (nodeSelected)="logEvent($event)"

@@ -42,7 +42,6 @@ export class CodeNodeComponent implements OnInit {
   @HostListener('mouseover')
   onNodeHover() {
     if (this._isLeaf) {
-      console.log(this.node.id);
       this.appService.selectNode(this.node.id);
     }
   }

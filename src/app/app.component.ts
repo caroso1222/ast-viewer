@@ -16,13 +16,16 @@ export class AppComponent implements OnInit, AfterViewInit {
   tree;
   extended = true;
 
+  @ViewChild('treeWrapper')
+  treeWrapper;
+
   @ViewChild('textarea')
   textarea: ElementRef;
 
   monaco = (window as any).monaco;
 
   nodeList = [];
-  counter = 0;
+  counter = 1;
   editorOptions = {
     theme: 'vs-dark',
     language: 'typescript',
@@ -43,6 +46,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.appService.setTree(this.tree);
+    this.appService.setTreeContainer(this.treeWrapper);
     this.code =
 `import { Component } from '@angular/core';
 
@@ -105,7 +109,7 @@ export class AppComponent  {
   }
 
   logEvent(evt) {
-    this.selectedNode = this.nodeList[evt.node.id];
+    this.selectedNode = this.nodeList[evt.node.id - 1];
     // delete this.selectedNode.parent;
     // delete this.selectedNode._children;
     // delete this.selectedNode.name;

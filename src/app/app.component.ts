@@ -1,3 +1,4 @@
+import { AppService } from './app.service';
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import * as ts from 'typescript';
 import { TreeNode } from 'angular-tree-component';
@@ -12,7 +13,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   nodes = {};
   code = '';
   @ViewChild('tree')
-  tree: TreeNode;
+  tree;
   extended = true;
 
   @ViewChild('textarea')
@@ -38,8 +39,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   rootNode;
 
+  constructor(private appService: AppService) { }
+
   ngOnInit() {
-    console.log(this.tree);
+    this.appService.setTree(this.tree);
     this.code =
 `import { Component } from '@angular/core';
 
@@ -78,9 +81,10 @@ export class AppComponent  {
       });
     }
     this.nodeList.push(node);
-    const obj: any = {
+    const obj: ASTNode = {
       value: ts.SyntaxKind[node.kind],
-      id: this.counter++
+      id: this.counter++,
+      tsNode: node
     };
     if (children.length) {
       obj.children = children;
@@ -91,8 +95,9 @@ export class AppComponent  {
   initTree(code) {
     this.cacheLines();
     const a = ts.createSourceFile('_.ts', code, ts.ScriptTarget.Latest, /*setParentNodes */ true);
-    this.rootNode = a;
+    // this.rootNode = a;
     this.nodes = this.visit(a);
+    this.rootNode = this.nodes;
   }
 
   cacheLines() {
@@ -155,10 +160,11 @@ export class AppComponent  {
   }
 }
 
-interface ASTNode {
+export interface ASTNode {
   value: string;
   children?: ASTNode[];
   id: number;
+  tsNode: ts.Node;
 }
 
 // http://mbostock.github.io/d3/talk/20110921/#21

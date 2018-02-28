@@ -12,6 +12,7 @@
   </div>
   <div class="col-xs-5 tree-wrapper">
     <tree [tree]="nodes"
+          #tree
           (nodeSelected)="logEvent($event)"
           (nodeHovered)="logEvent($event)"></tree>
   </div>

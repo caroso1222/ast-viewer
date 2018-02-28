@@ -1,6 +1,8 @@
-import { Component, OnInit, Input, ViewEncapsulation, HostBinding } from '@angular/core';
+import { AppService } from './../app.service';
+import { Component, OnInit, Input, ViewEncapsulation, HostBinding, HostListener } from '@angular/core';
 import * as ts from 'typescript';
 import * as _ts from 'typescript-compiler';
+import { ASTNode } from '../app.component';
 // import { isStartOfExpression } from 'typescript';
 
 @Component({
@@ -13,7 +15,7 @@ import * as _ts from 'typescript-compiler';
 export class CodeNodeComponent implements OnInit {
 
   @Input()
-  node;
+  node: ASTNode;
 
   children = [];
 
@@ -22,36 +24,43 @@ export class CodeNodeComponent implements OnInit {
   @HostBinding('class.code-node--leaf')
   _isLeaf = false;
 
-  constructor() { }
+  constructor(private appService: AppService) { }
 
   ngOnInit() {
-    this.node.getChildren().forEach(_node => {
-      this.children.push(_node);
-    });
-    this._isLeaf = this.isLeaf(this.node);
-    if (this.node) {
-      console.log(this.node, this.getNodeText());
+    if (this.node.children) {
+      this.node.children.forEach(_node => {
+        this.children.push(_node);
+      });
     }
+    this._isLeaf = this.isLeaf();
   }
 
-  isLeaf(node) {
+  isLeaf() {
     return this.children.length === 0;
   }
 
+  @HostListener('mouseover')
+  onNodeHover() {
+    if (this._isLeaf) {
+      console.log(this.node.id);
+      this.appService.selectNode(this.node.id);
+    }
+  }
+
   getNodeText() {
-    return this.node.getFullText().replace(/\n/g, '');
+    return this.node.tsNode.getFullText().replace(/\n/g, '');
   }
 
   getNumNewLines() {
-    return this.node.getFullText().match(/\n/g) || [];
+    return this.node.tsNode.getFullText().match(/\n/g) || [];
   }
 
   getClass() {
-    if (ts.isStringLiteral(this.node)) {
+    if (ts.isStringLiteral(this.node.tsNode)) {
       return 'mtk5';
-    } else if (this.node.kind >= 72 && this.node.kind <= 142) {
+    } else if (this.node.tsNode.kind >= 72 && this.node.tsNode.kind <= 142) {
       return 'mtk8';
-    } else if (ts.isNumericLiteral(this.node)) {
+    } else if (ts.isNumericLiteral(this.node.tsNode)) {
       return 'mtk6';
     } else {
       return 'mtk1';

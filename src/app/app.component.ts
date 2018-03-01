@@ -1,7 +1,7 @@
+import { Ng2TreeSettings } from './../shared/tree/tree.types';
 import { AppService } from './app.service';
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import * as ts from 'typescript';
-import { TreeNode } from 'angular-tree-component';
 
 @Component({
   selector: 'app-root',
@@ -41,6 +41,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   decorations = [];
 
   rootNode;
+
+  monacoActive = true;
 
   constructor(private appService: AppService) { }
 
@@ -88,7 +90,17 @@ export class AppComponent  {
     const obj: ASTNode = {
       value: ts.SyntaxKind[node.kind],
       id: this.counter++,
-      tsNode: node
+      tsNode: node,
+      settings: {
+        rightMenu: false,
+        static: true,
+        cssClasses: {
+          'expanded': 'fa fa-caret-down fa-white',
+          'collapsed': 'fa fa-caret-right fa-white',
+          'leaf': 'fa fa-circle fa-white',
+          'empty': 'fa fa-caret-right disabled fa-white'
+        }
+      }
     };
     if (children.length) {
       obj.children = children;
@@ -149,7 +161,7 @@ export class AppComponent  {
       noSemanticValidation: true,
       noSyntaxValidation: true
     });
-    this.selectText(5, 7, 6, 10);
+    // this.selectText(5, 7, 6, 10);
   }
 
   selectText(initRow, initCol, endRow, endCol) {
@@ -168,6 +180,7 @@ export interface ASTNode {
   value: string;
   children?: ASTNode[];
   id: number;
+  settings: any;
   tsNode: ts.Node;
 }
 

@@ -369,6 +369,7 @@ export class Tree {
    * @returns {boolean} A flag indicating whether or not this tree has a right menu.
    */
   public hasRightMenu(): boolean {
+    console.log(this.node.settings);
     return !get(this.node.settings, 'static', false) && get(this.node.settings, 'rightMenu', false);
   }
 

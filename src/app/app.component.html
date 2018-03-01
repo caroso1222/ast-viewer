@@ -1,27 +1,50 @@
 
-<div class="row">
-  <div class="col-xs-6">
+<div class="row m-0">
+  <div class="col-xs-4 p-0">
+    <div class="editors">
+      <div class="editors__toolbar">
+        <span class="editors__lbl editors__lbl--editor"
+              *ngIf="monacoActive">Editor View</span>
+        <span class="editors__lbl editors__lbl--inspector"
+              *ngIf="!monacoActive">Inspector View</span>
+        <button (click)="monacoActive = !monacoActive"
+                class="editors__switcher">
+          <ng-container *ngIf="monacoActive">Switch to Inspector View</ng-container>
+          <ng-container *ngIf="!monacoActive">Switch to Editor View</ng-container>
+        </button>
+      </div>
       <ngx-monaco-editor [options]="editorOptions"
+                          *ngIf="monacoActive"
+                          class="editors__monaco"
                         (ngModelChange)="initTree($event)"
                         (onInit)="onEditorInit($event)"
                         [(ngModel)]="code"></ngx-monaco-editor>
       
-      <div class="interactive-wrapper">
+      <div class="interactive-wrapper editors__fake"
+           *ngIf="!monacoActive">
         <div class="code-numbers">
           <span class="code-number" *ngFor="let num of cachedLinesLength; index as index">
             {{index + 1}}
           </span>
         </div>
         <code-node [node]="rootNode"></code-node>
-      </div>                  
+      </div>    
+    </div>              
   </div>
-  <div class="col-xs-5 tree-wrapper" #treeWrapper>
-    <tree [tree]="nodes"
-          #tree
-          (nodeSelected)="logEvent($event)"
-          (nodeHovered)="logEvent($event)"></tree>
+  <div class="col-xs-5 d-flex flex-column p-0">
+    <div class="tree__toolbar">
+      <span class="tree__lbl">Abstract Syntax Tree (AST)</span>
+    </div>
+
+    <div class="tree-wrapper p-0 monaco-scroll" #treeWrapper>
+      <tree [tree]="nodes"
+            class="prop-tree"
+            #tree
+            (nodeSelected)="logEvent($event)"
+            (nodeHovered)="logEvent($event)"></tree>
+    </div>
   </div>
-  <div class="col-xs-1">
+  <div class="col-xs-1 p-0">
     
     <label>
       <input type="checkbox" [(ngModel)]="extended"

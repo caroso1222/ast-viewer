@@ -58,6 +58,7 @@ body {
   }
   tree-internal .tree li div {
     cursor: pointer;
+    white-space: nowrap;
     &.selected .fa {
       color: #aa2724;
     }

@@ -3,6 +3,8 @@ import { AppService } from './app.service';
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import * as ts from 'typescript';
 
+const BLACKLIST = ['parent', '_children'];
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -43,6 +45,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   rootNode;
 
   monacoActive = true;
+
+  propsTree = {};
 
   constructor(private appService: AppService) { }
 
@@ -134,6 +138,65 @@ export class AppComponent  {
     // delete this.selectedNode.declarationList;
     // this.selectedNode.kind = ts.SyntaxKind[this.selectedNode.kind];
     this.createSelection(this.selectedNode.pos, this.selectedNode.end);
+  }
+
+  onNodeClick(evt) {
+    const node = evt.node.node.tsNode as ts.Node;
+    console.log(node);
+    const children = this.visitPropNode(node);
+    const root: any = {
+      value: ts.SyntaxKind[this.selectedNode.kind]
+    };
+    if (children.length) {
+      root.children = children;
+    }
+    console.log(root);
+    this.propsTree = root;
+    return root;
+  }
+
+
+  visitPropNode(node): any {
+    const keys = Object.keys(node)
+      .filter(key => BLACKLIST.indexOf(key) === -1);
+    const children = [];
+    for (const key of keys) {
+      const propValue = node[key];
+      const newObj: any = {
+        settings: {
+          rightMenu: false,
+          static: true,
+          cssClasses: {
+            'expanded': 'fa fa-caret-down fa-white',
+            'collapsed': 'fa fa-caret-right fa-white',
+            'leaf': 'fa fa-circle fa-white',
+            'empty': 'fa fa-caret-right disabled fa-white'
+          }
+        }
+      };
+      if (typeof propValue === 'object') {
+        let value = key;
+        if (propValue.length) {
+          value += `: Array(${propValue.length})`;
+        }
+        if (!isNaN(value as any)) {
+          const kind = ts.SyntaxKind[propValue.kind];
+          value = `${value}: ${kind}`;
+        }
+        newObj.value = value;
+        children.push(newObj);
+        const _children = this.visitPropNode(propValue);
+        if (_children.length) {
+          newObj.children = _children;
+        }
+      } else {
+        if (propValue) {
+          newObj.value = `${key}: ${propValue}`;
+          children.push(newObj);
+        }
+      }
+    }
+    return children;
   }
 
   onExtendedChange(evt) {

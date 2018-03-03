@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -16,6 +17,7 @@ import { AppService } from './app.service';
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     FormsModule,
     Ng2TreeModule,
     MonacoEditorModule.forRoot()

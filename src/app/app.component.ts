@@ -1,6 +1,12 @@
 import { Ng2TreeSettings } from './../shared/tree/tree.types';
 import { AppService } from './app.service';
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  ElementRef
+} from '@angular/core';
 import * as ts from 'typescript';
 
 const BLACKLIST = ['parent', '_children'];
@@ -54,14 +60,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.appService.setTree(this.tree);
     this.appService.setTreeContainer(this.treeWrapper);
     this.code =
-`import { Component } from '@angular/core';
+`import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'my-app',
   templateUrl: './app.component.html',
   styleUrls: [ './app.component.css' ]
 })
-export class AppComponent  {
+export class AppComponent implements OnInit {
   name = 'Angular 5';
 
   ngOnInit() {
@@ -141,18 +147,21 @@ export class AppComponent  {
   }
 
   onNodeClick(evt) {
-    const node = evt.node.node.tsNode as ts.Node;
-    console.log(node);
-    const children = this.visitPropNode(node);
-    const root: any = {
-      value: ts.SyntaxKind[this.selectedNode.kind]
-    };
-    if (children.length) {
-      root.children = children;
+    if (this.monacoActive) {
+      const node = evt.node.node.tsNode as ts.Node;
+      const children = this.visitPropNode(node);
+      const root: any = {
+        data: {
+          key: ts.SyntaxKind[this.selectedNode.kind],
+          kind: node.constructor.name
+        }
+      };
+      if (children.length) {
+        root.children = children;
+      }
+      this.propsTree = root;
+      return root;
     }
-    console.log(root);
-    this.propsTree = root;
-    return root;
   }
 
 
@@ -161,7 +170,7 @@ export class AppComponent  {
       .filter(key => BLACKLIST.indexOf(key) === -1);
     const children = [];
     for (const key of keys) {
-      const propValue = node[key];
+      let propValue = node[key];
       const newObj: any = {
         settings: {
           rightMenu: false,
@@ -172,18 +181,18 @@ export class AppComponent  {
             'leaf': 'fa fa-circle fa-white',
             'empty': 'fa fa-caret-right disabled fa-white'
           }
-        }
+        },
+        data: { key }
       };
       if (typeof propValue === 'object') {
-        let value = key;
+        newObj.data.kind = propValue.constructor.name;
         if (propValue.length) {
-          value += `: Array(${propValue.length})`;
+          newObj.data.kind = `Array(${propValue.length})`;
+          newObj.data.type = 'array';
         }
-        if (!isNaN(value as any)) {
-          const kind = ts.SyntaxKind[propValue.kind];
-          value = `${value}: ${kind}`;
+        if (!isNaN(key as any)) {
+          newObj.data.kind = ts.SyntaxKind[propValue.kind];
         }
-        newObj.value = value;
         children.push(newObj);
         const _children = this.visitPropNode(propValue);
         if (_children.length) {
@@ -191,7 +200,14 @@ export class AppComponent  {
         }
       } else {
         if (propValue) {
-          newObj.value = `${key}: ${propValue}`;
+          newObj.data.type = typeof propValue;
+          if (typeof propValue === 'string') {
+            propValue = `'${propValue}'`;
+          }
+          if (key === 'kind') {
+            newObj.data.kind = ts.SyntaxKind[propValue];
+          }
+          newObj.data.propValue = propValue;
           children.push(newObj);
         }
       }

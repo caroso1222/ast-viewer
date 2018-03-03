@@ -33,6 +33,8 @@ export class TreeComponent implements OnInit, OnChanges, OnDestroy {
   @Input('tree') public treeModel: TreeTypes.TreeModel;
   /* tslint:enable:no-input-rename */
 
+  @Input() public nodeTemplae: TemplateRef<any>;
+
   @Input() public settings: TreeTypes.Ng2TreeSettings;
 
   @Output() public nodeCreated: EventEmitter<any> = new EventEmitter();

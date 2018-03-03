@@ -27,6 +27,7 @@
     "ng2-tree": "^2.0.0-rc.9",
     "ngx-monaco-editor": "^4.0.1",
     "rxjs": "^5.5.6",
+    "source-map-support": "0.4.3",
     "typescript-compiler": "^1.4.1-2",
     "zone.js": "^0.8.19"
   },
@@ -49,6 +50,6 @@
     "protractor": "~5.1.2",
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",
-    "typescript": "~2.5.3"
+    "typescript": "^2.5.3"
   }
 }

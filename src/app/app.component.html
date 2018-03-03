@@ -52,8 +52,19 @@
     </label>
 
     <tree [tree]="propsTree"
-          class="prop-tree"></tree>
+          class="prop-tree">
+          <ng-template let-node>
+            <span class="prop-key">{{node.data?.key}}:</span>
+            <span class="prop-value" [ngClass]="'prop-value--' + node.data?.type">
+              {{node.data?.propValue}}</span>
+            <span *ngIf="node.data?.kind" class="prop-kind" [ngClass]="'prop-kind--' + node.data?.type">
+              <ng-container *ngIf="node.data?.propValue">-</ng-container> {{node.data?.kind}}</span>
+          </ng-template>
+        </tree>
         </div>
   </div>
 </div>
-<!-- <tree-root [nodes]="nodes" #tree></tree-root> -->
+
+<ng-template #propNode let-node>
+
+</ng-template>

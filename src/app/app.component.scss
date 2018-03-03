@@ -22,6 +22,28 @@
   padding-bottom: 10px;
 }
 
+.prop-key {
+  color:#d4d4d4;
+}
+
+.prop-value {
+  &--number {
+    color: #b5cea8;
+  }
+  &--string {
+    color: #ce9178; 
+  }
+}
+
+.prop-kind {
+  color:#d4d4d4;
+  opacity: 0.5;
+  &--array {
+    color: #569cd6;
+    opacity: 1;
+  }
+}
+
 .tree {
   &__toolbar {
     background: #1e1e1e;

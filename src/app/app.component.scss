@@ -134,12 +134,28 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #cbcbcb;
-  padding: 0 10px;
+  padding: 0 0 0 10px;
   font-family: Menlo, Monaco, "Courier New", monospace;
   &, &__title {
-    font-size: 13px;
+    font-size: 12px;
     margin: 0;
+  }
+  &, &__github {
+    color: #cbcbcb;
+    text-decoration: none;
+    font-size: 12px;
+  }
+  &__github {
+    background: #2f2f2f;
+    padding: 0 10px 0 10px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover{
+      color: #cbcbcb;
+      background: #292929;
+    }
   }
 }
 
@@ -191,8 +207,6 @@
 
   &__lbl {
     font-size: 11px;
-    position: relative;
-    top: 1px;
     &--editor {
       color: #47ecdd;
     }

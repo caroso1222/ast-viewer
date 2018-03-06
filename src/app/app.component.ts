@@ -119,30 +119,18 @@ export class AppComponent implements OnInit {
   }
 
   initTree(code) {
-    this.cacheLines();
-    const a = ts.createSourceFile('_.ts', code, ts.ScriptTarget.Latest, /*setParentNodes */ true);
-    // this.rootNode = a;
+    const a = ts.createSourceFile('_.ts', code, ts.ScriptTarget.Latest, true);
     this.nodes = this.visit(a);
     this.rootNode = this.nodes;
+    this.cacheLines(code);
   }
 
-  cacheLines() {
-    this.cachedLinesLength = this.code.split('\n').map(l => l.length + 1);
+  cacheLines(code) {
+    this.cachedLinesLength = code.split('\n').map(l => l.length + 1);
   }
 
   logEvent(evt) {
     this.selectedNode = this.nodeList[evt.node.id - 1];
-    // delete this.selectedNode.parent;
-    // delete this.selectedNode._children;
-    // delete this.selectedNode.name;
-    // delete this.selectedNode.initializer;
-    // delete this.selectedNode.declarations;
-    // delete this.selectedNode.type;
-    // delete this.selectedNode.expression;
-    // delete this.selectedNode.thenStatement;
-    // delete this.selectedNode.statements;
-    // delete this.selectedNode.declarationList;
-    // this.selectedNode.kind = ts.SyntaxKind[this.selectedNode.kind];
     this.createSelection(this.selectedNode.pos, this.selectedNode.end);
   }
 
@@ -151,6 +139,16 @@ export class AppComponent implements OnInit {
       const node = evt.node.node.tsNode as ts.Node;
       const children = this.visitPropNode(node);
       const root: any = {
+        settings: {
+          rightMenu: false,
+          static: true,
+          cssClasses: {
+            'expanded': 'fa fa-caret-down fa-white',
+            'collapsed': 'fa fa-caret-right fa-white',
+            'leaf': 'fa fa-circle fa-white',
+            'empty': 'fa fa-caret-right disabled fa-white'
+          }
+        },
         data: {
           key: ts.SyntaxKind[this.selectedNode.kind],
           kind: node.constructor.name

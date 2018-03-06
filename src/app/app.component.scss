@@ -126,6 +126,23 @@
   padding-right: 9px;
 }
 
+.header {
+  flex-basis: 26px;
+  flex-shrink: 0;
+  background: #1e1e1e;
+  border-bottom: 1px solid #404040;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #cbcbcb;
+  padding: 0 10px;
+  font-family: Menlo, Monaco, "Courier New", monospace;
+  &, &__title {
+    font-size: 13px;
+    margin: 0;
+  }
+}
+
 .code-number {
   display: block;
   color: #5a5a5a;

@@ -31,9 +31,17 @@
       </div>    
     </div>              
   </div>
-  <div class="col-xs-5 d-flex flex-column p-0">
+  <div class="col-xs-5 flex-column p-0">
     <div class="tree__toolbar">
       <span class="tree__lbl">Abstract Syntax Tree (AST)</span>
+      <label class="tree__checkbox-lbl">
+        <input type="checkbox"
+              class="tree__checkbox-ctrl"
+              [(ngModel)]="extended" 
+              (change)="onExtendedChange($event)"> 
+        <span class="tree__checkbox-fake"></span>
+              Extended
+      </label>
     </div>
 
     <div class="tree-wrapper p-0 monaco-scroll" #treeWrapper>
@@ -46,10 +54,6 @@
   </div>
   <div class="col-xs-3 p-0">
     <div class="tree-wrapper p-0 monaco-scroll" #treeWrapper>
-    <label>
-      <input type="checkbox" [(ngModel)]="extended"
-          (change)="onExtendedChange($event)"> Extended
-    </label>
 
     <tree [tree]="propsTree"
           class="prop-tree">

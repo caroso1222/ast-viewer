@@ -53,14 +53,51 @@
     align-items: center;
     height: 25px;
     flex-shrink: 0;
-    padding-left: 10px;
-    padding-right: 0;
+    padding: 0 10px;
   }
   &__lbl {
     color: #47ecdd;
     font-size: 11px;
     position: relative;
     top: 1px;
+  }
+  &__checkbox-ctrl {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  &__checkbox-fake {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border: 1px solid #cbcbcb;
+    border-radius: 1px;
+    position: relative;
+    top: 1px;
+    &:after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      height: 5px;
+      width: 5px;
+      background: transparent;
+    }
+  }
+
+  &__checkbox-ctrl:checked ~ span:after {
+    background: #cbcbcb;
+  }
+
+  &__checkbox-lbl {
+    font-family: Menlo, Monaco, "Courier New", monospace;
+    color:#cbcbcb;
+    font-size: 11px;
+    position: relative;
   }
 }
 

@@ -52,7 +52,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   monacoActive = true;
 
-  propsTree = {};
+  propsTree;
 
   constructor(private appService: AppService) { }
 

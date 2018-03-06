@@ -63,7 +63,26 @@ body {
       color: #aa2724;
     }
   }
+
+  .prop-tree {
+    tree-internal .tree .node-value {
+      cursor: default;
+      &:hover {
+        background: #2d2d2d;
+      }
+    }
+    tree-internal .tree .node-selected {
+      background: #2d2d2d;
+    }
+    tree-internal .tree li div {
+      &.selected .fa {
+        color: #cbcbcb;
+      }
+    }
+  }
 }
+
+
 
 .myInlineDecoration {
   background: rgba(230, 49, 49, 0.44);

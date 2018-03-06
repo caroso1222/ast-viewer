@@ -31,41 +31,50 @@
       </div>    
     </div>              
   </div>
-  <div class="col-xs-5 flex-column p-0">
+  <div class="col-xs-5 p-0">
     <div class="tree__toolbar">
       <span class="tree__lbl">Abstract Syntax Tree (AST)</span>
       <label class="tree__checkbox-lbl">
+        Extended
         <input type="checkbox"
               class="tree__checkbox-ctrl"
               [(ngModel)]="extended" 
               (change)="onExtendedChange($event)"> 
         <span class="tree__checkbox-fake"></span>
-              Extended
       </label>
     </div>
 
     <div class="tree-wrapper p-0 monaco-scroll" #treeWrapper>
       <tree [tree]="nodes"
-            class="prop-tree"
             #tree
             (nodeSelected)="onNodeClick($event)"
             (nodeHovered)="logEvent($event)"></tree>
     </div>
   </div>
   <div class="col-xs-3 p-0">
-    <div class="tree-wrapper p-0 monaco-scroll" #treeWrapper>
+    <div class="tree__toolbar">
+      <span class="tree__lbl">Property Inspector</span>
+    </div>
 
-    <tree [tree]="propsTree"
-          class="prop-tree">
-          <ng-template let-node>
-            <span class="prop-key">{{node.data?.key}}:</span>
-            <span class="prop-value" [ngClass]="'prop-value--' + node.data?.type">
-              {{node.data?.propValue}}</span>
-            <span *ngIf="node.data?.kind" class="prop-kind" [ngClass]="'prop-kind--' + node.data?.type">
-              <ng-container *ngIf="node.data?.propValue">-</ng-container> {{node.data?.kind}}</span>
-          </ng-template>
-        </tree>
-        </div>
+    <div class="tree-wrapper p-0 monaco-scroll" #treeWrapper>
+      <tree [tree]="propsTree"
+        *ngIf="propsTree else placeholder"
+        class="prop-tree">
+        <ng-template let-node>
+          <span class="prop-key">{{node.data?.key}}:</span>
+          <span class="prop-value" [ngClass]="'prop-value--' + node.data?.type">
+            {{node.data?.propValue}}</span>
+          <span *ngIf="node.data?.kind" class="prop-kind" [ngClass]="'prop-kind--' + node.data?.type">
+            <ng-container *ngIf="node.data?.propValue">-</ng-container> {{node.data?.kind}}</span>
+        </ng-template>
+      </tree>
+    </div>
+
+    <ng-template #placeholder>
+      <p class="placeholder">
+        Click on any node in the "Abstract Syntax Tree (AST)" panel to view its properties.
+      </p>
+    </ng-template>
   </div>
 </div>
 

@@ -27,6 +27,11 @@ button {
 }
 
 body {
+
+  .editors__monaco {
+    height: inherit;
+  }
+
   tree-internal ul {
     padding: 3px 0 3px 15px;
   }
@@ -129,5 +134,20 @@ pre {
     position: relative;
     top: -2px;
     right: 0;
+  }
+}
+
+input,
+textarea,
+button,
+select,
+div,
+a {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  body tree-internal .tree {
+    font-size: 11px;
   }
 }

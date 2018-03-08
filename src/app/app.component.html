@@ -3,10 +3,26 @@
   <a href="https://www.github.com/" target="_blank" class="header__github">GitHub</a>
 </div>
 <div class="row m-0 main-wrapper">
-  <div class="col-xs-12 mobile-menu"></div>
+  <div class="mobile-menu">
+    <button class="mobile-btn"
+            [class.mobile-btn--active]="activePanel === 'editor'"
+            (click)="activePanel = 'editor'">
+            Editor View
+    </button>
+    <button class="mobile-btn"
+            [class.mobile-btn--active]="activePanel === 'nodes'"
+            (click)="activePanel = 'nodes'">
+            AST View
+    </button>
+    <button class="mobile-btn"
+            [class.mobile-btn--active]="activePanel === 'props'"
+            (click)="activePanel = 'props'">
+            Property Inspector
+    </button>
+  </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'editor'">
     <div class="editors">
-      <div class="editors__toolbar">
+      <div class="editors__toolbar panel__toolbar">
         <span class="editors__lbl editors__lbl--editor"
               *ngIf="monacoActive">Editor View</span>
         <span class="editors__lbl editors__lbl--inspector"
@@ -18,6 +34,7 @@
         </button>
       </div>
       <ngx-monaco-editor [options]="editorOptions"
+                          class="monaco-editor"
                           *ngIf="monacoActive"
                           class="editors__monaco"
                         (ngModelChange)="initTree($event)"
@@ -36,7 +53,7 @@
     </div>              
   </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'nodes'">
-    <div class="tree__toolbar">
+    <div class="tree__toolbar panel__toolbar">
       <span class="tree__lbl">Abstract Syntax Tree (AST)</span>
       <label class="tree__checkbox-lbl">
         Extended
@@ -56,7 +73,7 @@
     </div>
   </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'props'">
-    <div class="tree__toolbar">
+    <div class="tree__toolbar panel__toolbar">
       <span class="tree__lbl">Property Inspector</span>
     </div>
 

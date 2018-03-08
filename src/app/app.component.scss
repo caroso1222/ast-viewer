@@ -223,22 +223,57 @@
 
 .mobile-menu {
   display: none;
+  border-bottom: 1px solid #404040;
+  background: #1e1e1e;
+  justify-content: space-between;
+}
+
+.mobile-btn {
+  background: none;
+  padding: 0 10px;
+  margin: 0;
+  font-size: 10px;
+  color: #47ecdd;
+  opacity: 0.5;
+  border: none;
+  border-right: 1px solid #404040;
+  height: 28px;
+  white-space: nowrap;
+  flex: 1;
+  border-bottom: 1px solid transparent;
+  &--active {
+    opacity: 1;
+    border-bottom: 1px solid #47ecdd;
+  }
 }
 
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
   .panel {
     display: none;
     &--active {
-      display: block;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+    &__toolbar {
+      display: none;
     }
   }
 
   .main-wrapper {
     flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .mobile-menu {
-    display: block;
+    display: flex;
+  }
+  .header {
+    flex-basis: 29px;
+    &__title {
+      font-size: 11px;
+    }
   }
 }
   

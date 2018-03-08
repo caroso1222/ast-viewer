@@ -24,6 +24,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   tree;
   extended = true;
 
+  activePanel: 'editor' | 'nodes' | 'props' = 'editor';
+
   @ViewChild('treeWrapper')
   treeWrapper;
 

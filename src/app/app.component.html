@@ -2,8 +2,9 @@
   <h1 class="header__title">Interactive TypeScript AST Analyzer</h1>
   <a href="https://www.github.com/" target="_blank" class="header__github">GitHub</a>
 </div>
-<div class="row m-0">
-  <div class="col-sm-4 col-xs-12 p-0">
+<div class="row m-0 main-wrapper">
+  <div class="col-xs-12 mobile-menu"></div>
+  <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'editor'">
     <div class="editors">
       <div class="editors__toolbar">
         <span class="editors__lbl editors__lbl--editor"
@@ -34,7 +35,7 @@
       </div>    
     </div>              
   </div>
-  <div class="col-sm-4 col-xs-12 p-0">
+  <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'nodes'">
     <div class="tree__toolbar">
       <span class="tree__lbl">Abstract Syntax Tree (AST)</span>
       <label class="tree__checkbox-lbl">
@@ -54,7 +55,7 @@
             (nodeHovered)="logEvent($event)"></tree>
     </div>
   </div>
-  <div class="col-sm-4 col-xs-12 p-0">
+  <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'props'">
     <div class="tree__toolbar">
       <span class="tree__lbl">Property Inspector</span>
     </div>

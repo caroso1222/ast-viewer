@@ -1,6 +1,7 @@
 :host {
   display: flex;
   flex-direction: column;
+  height: 100%;
   ::ng-deep {
     .editors .editor-container {
       height: 100%;
@@ -219,3 +220,25 @@
 .editor-wrapper {
   position: relative;
 }
+
+.mobile-menu {
+  display: none;
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  .panel {
+    display: none;
+    &--active {
+      display: block;
+    }
+  }
+
+  .main-wrapper {
+    flex: 1;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
+}
+  

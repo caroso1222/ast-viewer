@@ -47,3 +47,31 @@
     }
   }
 }
+
+.interactive-wrapper {
+  background: #1e1e1e;
+  padding-left: 46px;
+  position: relative;
+  font-family: Menlo, Monaco, "Courier New", monospace;
+}
+
+.code-numbers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-right: 1px solid #404040;
+  padding-right: 9px;
+}
+
+.code-number {
+  display: block;
+  color: #5a5a5a;
+  font-family: Menlo, Monaco, "Courier New", monospace;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 300;
+  width: 36px;
+  line-height: 17px;
+  margin-top: 0.8px;
+  margin-bottom: 0.7px;
+}

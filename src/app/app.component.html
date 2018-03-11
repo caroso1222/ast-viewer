@@ -23,6 +23,7 @@
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'editor'">
     <app-editor-view  (codeUpdate)="onCodeUpdate($event)"
                       [initialCode]="initialCode"
+                      [rootNode]="rootNode"
                       [codeSelection]="codeSelection">
     </app-editor-view>            
   </div>
@@ -47,32 +48,6 @@
     </div>
   </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'props'">
-    <div class="tree__toolbar panel__toolbar">
-      <span class="tree__lbl">Property Inspector</span>
-    </div>
-
-    <div class="tree-wrapper p-0 monaco-scroll" #treeWrapper>
-      <tree [tree]="propsTree"
-        *ngIf="propsTree else placeholder"
-        class="prop-tree">
-        <ng-template let-node>
-          <span class="prop-key">{{node.data?.key}}:</span>
-          <span class="prop-value" [ngClass]="'prop-value--' + node.data?.type">
-            {{node.data?.propValue}}</span>
-          <span *ngIf="node.data?.kind" class="prop-kind" [ngClass]="'prop-kind--' + node.data?.type">
-            <ng-container *ngIf="node.data?.propValue">-</ng-container> {{node.data?.kind}}</span>
-        </ng-template>
-      </tree>
-    </div>
-
-    <ng-template #placeholder>
-      <p class="placeholder">
-        Click on any node in the "Abstract Syntax Tree (AST)" panel to view its properties.
-      </p>
-    </ng-template>
+    <app-detail-view [node]="detailNode"></app-detail-view>
   </div>
 </div>
-
-<ng-template #propNode let-node>
-
-</ng-template>

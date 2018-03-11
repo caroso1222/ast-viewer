@@ -65,15 +65,19 @@ export class EditorViewComponent implements OnInit {
   cachedLinesLength = [];
 
   /**
+   * The root node of the tree used to render the fake code editor
+   */
+  @Input()
+  rootNode;
+
+  /**
    * Represents a code snippet selection given its startPos and endPos
    */
   @Input()
   set codeSelection(selection: CodeSelection) {
-    console.log(selection);
     if (selection) {
       const [initRow, initCol] = this.getLineCol(selection.startPos);
       const [endRow, endCol] = this.getLineCol(selection.endPos);
-      console.log(initRow, initCol, endRow, endCol);
       this.selectText(initRow, initCol, endRow, endCol);
     }
   }

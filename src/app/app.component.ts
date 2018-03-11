@@ -41,12 +41,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   selectedNode: any = {};
 
-
   rootNode;
 
-  monacoActive = true;
+  detailNode;
 
-  propsTree;
+  monacoActive = true;
 
   codeSelection: CodeSelection;
 
@@ -157,7 +156,7 @@ export class AppComponent implements OnInit {
       if (children.length) {
         root.children = children;
       }
-      this.propsTree = root;
+      this.detailNode = root;
       return root;
     }
   }

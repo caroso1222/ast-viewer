@@ -15,11 +15,9 @@
     height: inherit;
     margin-right: -8.5px;
   } 
-  // border: 1px solid transparent;
   &.code-node--leaf:hover {
     code {
       background: rgba(230, 49, 49, 0.44);
     }
-    // border: 1px solid red;
   }
 }

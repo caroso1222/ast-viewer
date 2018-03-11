@@ -240,7 +240,6 @@ export class AppComponent implements OnInit {
       noSemanticValidation: true,
       noSyntaxValidation: true
     });
-    // this.selectText(5, 7, 6, 10);
   }
 
   selectText(initRow, initCol, endRow, endCol) {

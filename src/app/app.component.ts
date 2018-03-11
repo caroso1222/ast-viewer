@@ -5,19 +5,17 @@ import {
   Component,
   OnInit,
   ViewChild,
-  AfterViewInit,
   ElementRef
 } from '@angular/core';
 import * as ts from 'typescript';
 
-const BLACKLIST = ['parent', '_children'];
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit {
   nodes = {};
 
 
@@ -82,9 +80,6 @@ export class AppComponent implements OnInit {
     this.onCodeUpdate(this.initialCode);
   }
 
-  ngAfterViewInit() {
-  }
-
   visit(node: ts.Node): ASTNode {
     const children = [];
     if (this.extended) {
@@ -125,7 +120,7 @@ export class AppComponent implements OnInit {
     this.rootNode = this.nodes;
   }
 
-  logEvent(evt) {
+  onASTNodeHover(evt) {
     this.selectedNode = this.nodeList[evt.node.id - 1];
     this.codeSelection = {
       startPos: this.selectedNode.pos,
@@ -133,87 +128,15 @@ export class AppComponent implements OnInit {
     };
   }
 
-  onNodeClick(evt) {
+  onASTNodeClick(evt) {
     if (this.monacoActive) {
-      const node = evt.node.node.tsNode as ts.Node;
-      const children = this.visitPropNode(node);
-      const root: any = {
-        settings: {
-          rightMenu: false,
-          static: true,
-          cssClasses: {
-            'expanded': 'fa fa-caret-down fa-white',
-            'collapsed': 'fa fa-caret-right fa-white',
-            'leaf': 'fa fa-circle fa-white',
-            'empty': 'fa fa-caret-right disabled fa-white'
-          }
-        },
-        data: {
-          key: ts.SyntaxKind[this.selectedNode.kind],
-          kind: node.constructor.name
-        }
-      };
-      if (children.length) {
-        root.children = children;
-      }
-      this.detailNode = root;
-      return root;
+      this.detailNode = evt.node.node.tsNode as ts.Node;
     }
-  }
-
-
-  visitPropNode(node): any {
-    const keys = Object.keys(node)
-      .filter(key => BLACKLIST.indexOf(key) === -1);
-    const children = [];
-    for (const key of keys) {
-      let propValue = node[key];
-      const newObj: any = {
-        settings: {
-          rightMenu: false,
-          static: true,
-          cssClasses: {
-            'expanded': 'fa fa-caret-down fa-white',
-            'collapsed': 'fa fa-caret-right fa-white',
-            'leaf': 'fa fa-circle fa-white',
-            'empty': 'fa fa-caret-right disabled fa-white'
-          }
-        },
-        data: { key }
-      };
-      if (typeof propValue === 'object') {
-        newObj.data.kind = propValue.constructor.name;
-        if (propValue.length) {
-          newObj.data.kind = `Array(${propValue.length})`;
-          newObj.data.type = 'array';
-        }
-        if (!isNaN(key as any)) {
-          newObj.data.kind = ts.SyntaxKind[propValue.kind];
-        }
-        children.push(newObj);
-        const _children = this.visitPropNode(propValue);
-        if (_children.length) {
-          newObj.children = _children;
-        }
-      } else {
-        if (propValue) {
-          newObj.data.type = typeof propValue;
-          if (typeof propValue === 'string') {
-            propValue = `'${propValue}'`;
-          }
-          if (key === 'kind') {
-            newObj.data.kind = ts.SyntaxKind[propValue];
-          }
-          newObj.data.propValue = propValue;
-          children.push(newObj);
-        }
-      }
-    }
-    return children;
   }
 
 
   onExtendedChange(evt) {
+    this.extended = evt;
     this.onCodeUpdate(this.code);
   }
 }

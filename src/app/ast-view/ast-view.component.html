@@ -1,3 +1,18 @@
-<p>
-  ast-view works!
-</p>
+<div class="tree__toolbar panel__toolbar">
+  <span class="tree__lbl">Abstract Syntax Tree (AST)</span>
+  <label class="tree__checkbox-lbl">
+    Extended
+    <input type="checkbox"
+          class="tree__checkbox-ctrl"
+          [(ngModel)]="extended" 
+          (change)="onExtendedChange()"> 
+    <span class="tree__checkbox-fake"></span>
+  </label>
+</div>
+
+<div class="tree-wrapper p-0 monaco-scroll" #treeWrapper>
+  <tree [tree]="rootNode"
+        #tree
+        (nodeSelected)="onNodeClick($event)"
+        (nodeHovered)="onNodeHover($event)"></tree>
+</div>

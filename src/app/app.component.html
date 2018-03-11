@@ -28,24 +28,11 @@
     </app-editor-view>            
   </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'nodes'">
-    <div class="tree__toolbar panel__toolbar">
-      <span class="tree__lbl">Abstract Syntax Tree (AST)</span>
-      <label class="tree__checkbox-lbl">
-        Extended
-        <input type="checkbox"
-              class="tree__checkbox-ctrl"
-              [(ngModel)]="extended" 
-              (change)="onExtendedChange($event)"> 
-        <span class="tree__checkbox-fake"></span>
-      </label>
-    </div>
-
-    <div class="tree-wrapper p-0 monaco-scroll" #treeWrapper>
-      <tree [tree]="nodes"
-            #tree
-            (nodeSelected)="onNodeClick($event)"
-            (nodeHovered)="logEvent($event)"></tree>
-    </div>
+    <app-ast-view (nodeHover)="onASTNodeHover($event)"
+                  (nodeClick)="onASTNodeClick($event)"
+                  (extendedChange)="onExtendedChange($event)"
+                  [rootNode]="rootNode">
+    </app-ast-view>
   </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'props'">
     <app-detail-view [node]="detailNode"></app-detail-view>

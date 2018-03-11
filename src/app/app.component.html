@@ -21,36 +21,10 @@
     </button>
   </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'editor'">
-    <div class="editors">
-      <div class="editors__toolbar panel__toolbar">
-        <span class="editors__lbl editors__lbl--editor"
-              *ngIf="monacoActive">Editor View</span>
-        <span class="editors__lbl editors__lbl--inspector"
-              *ngIf="!monacoActive">Inspector View</span>
-        <button (click)="monacoActive = !monacoActive"
-                class="editors__switcher">
-          <ng-container *ngIf="monacoActive">Switch to Inspector View</ng-container>
-          <ng-container *ngIf="!monacoActive">Switch to Editor View</ng-container>
-        </button>
-      </div>
-      <ngx-monaco-editor [options]="editorOptions"
-                          class="monaco-editor"
-                          *ngIf="monacoActive"
-                          class="editors__monaco"
-                        (ngModelChange)="initTree($event)"
-                        (onInit)="onEditorInit($event)"
-                        [(ngModel)]="code"></ngx-monaco-editor>
-      
-      <div class="interactive-wrapper editors__fake"
-           *ngIf="!monacoActive">
-        <div class="code-numbers">
-          <span class="code-number" *ngFor="let num of cachedLinesLength; index as index">
-            {{index + 1}}
-          </span>
-        </div>
-        <code-node [node]="rootNode"></code-node>
-      </div>    
-    </div>              
+    <app-editor-view  (codeUpdate)="onCodeUpdate($event)"
+                      [initialCode]="initialCode"
+                      [codeSelection]="codeSelection">
+    </app-editor-view>            
   </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'nodes'">
     <div class="tree__toolbar panel__toolbar">

@@ -8,12 +8,18 @@ import { TreeModule as Ng2TreeModule } from '../shared/tree/tree.module';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { CodeNodeComponent } from './code-node/code-node.component';
 import { AppService } from './app.service';
+import { EditorViewComponent } from './editor-view/editor-view.component';
+import { AstViewComponent } from './ast-view/ast-view.component';
+import { DetailViewComponent } from './detail-view/detail-view.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    CodeNodeComponent
+    CodeNodeComponent,
+    EditorViewComponent,
+    AstViewComponent,
+    DetailViewComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,49 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.editors {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  &__monaco, &__fake {
+    flex: 1;
+  }
+  &__toolbar {
+    background: #1e1e1e;
+    border-bottom: 1px solid #404040;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-basis: 25px;
+    flex-shrink: 0;
+    padding-left: 10px;
+    padding-right: 0;
+  }
+
+  &__switcher {
+    cursor: pointer;
+    background: none;
+    color: #cbcbcb;
+    border: none;
+    height: 100%;
+    padding: 1px 10px 0 10px;
+    margin: 0;
+    background: #2f2f2f;
+    &:hover {
+      background: #292929;
+    }
+  }
+
+  &__lbl {
+    font-size: 11px;
+    &--editor {
+      color: #47ecdd;
+    }
+    &--inspector {
+      color: #c26bd8;
+    }
+  }
+}

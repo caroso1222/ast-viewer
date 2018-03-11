@@ -1,3 +1,4 @@
+import { CodeSelection } from 'shared/models/code-selection';
 import { Ng2TreeSettings } from './../shared/tree/tree.types';
 import { AppService } from './app.service';
 import {
@@ -17,11 +18,12 @@ const BLACKLIST = ['parent', '_children'];
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  title = 'app';
   nodes = {};
-  code = '';
+
+
   @ViewChild('tree')
   tree;
+
   extended = true;
 
   activePanel: 'editor' | 'nodes' | 'props' = 'editor';
@@ -36,19 +38,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   nodeList = [];
   counter = 1;
-  editorOptions = {
-    theme: 'vs-dark',
-    language: 'typescript',
-    minimap: { enabled: false }
-  };
 
   selectedNode: any = {};
 
-  cachedLinesLength = [];
-
-  editor;
-
-  decorations = [];
 
   rootNode;
 
@@ -56,13 +48,17 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   propsTree;
 
+  codeSelection: CodeSelection;
+
+  initialCode;
+
+  code;
+
   constructor(private appService: AppService) { }
 
   ngOnInit() {
-    this.appService.setTree(this.tree);
-    this.appService.setTreeContainer(this.treeWrapper);
-    this.code =
-`import { Component, OnInit } from '@angular/core';
+    this.initialCode =
+`import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'my-app',
@@ -81,7 +77,10 @@ export class AppComponent implements OnInit {
   }
 }
 `;
-    this.initTree(this.code);
+    this.appService.setTree(this.tree);
+    this.appService.setTreeContainer(this.treeWrapper);
+
+    this.onCodeUpdate(this.initialCode);
   }
 
   ngAfterViewInit() {
@@ -120,20 +119,19 @@ export class AppComponent implements OnInit {
     return obj;
   }
 
-  initTree(code) {
+  onCodeUpdate(code: string) {
+    this.code = code;
     const a = ts.createSourceFile('_.ts', code, ts.ScriptTarget.Latest, true);
     this.nodes = this.visit(a);
     this.rootNode = this.nodes;
-    this.cacheLines(code);
-  }
-
-  cacheLines(code) {
-    this.cachedLinesLength = code.split('\n').map(l => l.length + 1);
   }
 
   logEvent(evt) {
     this.selectedNode = this.nodeList[evt.node.id - 1];
-    this.createSelection(this.selectedNode.pos, this.selectedNode.end);
+    this.codeSelection = {
+      startPos: this.selectedNode.pos,
+      endPos: this.selectedNode.end
+    };
   }
 
   onNodeClick(evt) {
@@ -215,45 +213,10 @@ export class AppComponent implements OnInit {
     return children;
   }
 
+
   onExtendedChange(evt) {
-    this.initTree(this.code);
+    this.onCodeUpdate(this.code);
   }
-
-  createSelection(start, end) {
-    const [initRow, initCol] = this.getLineCol(start);
-    const [endRow, endCol] = this.getLineCol(end);
-    this.selectText(initRow, initCol, endRow, endCol);
-  }
-
-  getLineCol(pos) {
-    for (let i = 0; i < this.cachedLinesLength.length; i++) {
-      if (this.cachedLinesLength[i] > pos) {
-        return [i + 1, pos + 1];
-      }
-      pos -= this.cachedLinesLength[i];
-    }
-  }
-
-  onEditorInit(editor: any) {
-    this.editor = editor;
-    (window as any).monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-      noSemanticValidation: true,
-      noSyntaxValidation: true
-    });
-  }
-
-  selectText(initRow, initCol, endRow, endCol) {
-    this.decorations = this.editor.deltaDecorations(this.decorations, [
-      {
-        range: new (window as any).monaco.Range(initRow, initCol, endRow, endCol),
-        options: {
-          inlineClassName: 'myInlineDecoration'
-        }
-      },
-    ]);
-  }
-
-
 }
 
 export interface ASTNode {

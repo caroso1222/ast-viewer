@@ -1,6 +1,6 @@
 <div class="header">
-  <h1 class="header__title">Interactive TypeScript AST Analyzer</h1>
-  <a href="https://www.github.com/" target="_blank" class="header__github">GitHub</a>
+  <h1 class="header__title">Interactive TypeScript AST Viewer</h1>
+  <a href="https://github.com/caroso1222/ast-viewer" target="_blank" class="header__github">GitHub</a>
 </div>
 <div class="row m-0 main-wrapper">
   <div class="mobile-menu">
@@ -21,84 +21,26 @@
     </button>
   </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'editor'">
-    <div class="editors">
-      <div class="editors__toolbar panel__toolbar">
-        <span class="editors__lbl editors__lbl--editor"
-              *ngIf="monacoActive">Editor View</span>
-        <span class="editors__lbl editors__lbl--inspector"
-              *ngIf="!monacoActive">Inspector View</span>
-        <button (click)="monacoActive = !monacoActive"
-                class="editors__switcher">
-          <ng-container *ngIf="monacoActive">Switch to Inspector View</ng-container>
-          <ng-container *ngIf="!monacoActive">Switch to Editor View</ng-container>
-        </button>
-      </div>
-      <ngx-monaco-editor [options]="editorOptions"
-                          class="monaco-editor"
-                          *ngIf="monacoActive"
-                          class="editors__monaco"
-                        (ngModelChange)="initTree($event)"
-                        (onInit)="onEditorInit($event)"
-                        [(ngModel)]="code"></ngx-monaco-editor>
-      
-      <div class="interactive-wrapper editors__fake"
-           *ngIf="!monacoActive">
-        <div class="code-numbers">
-          <span class="code-number" *ngFor="let num of cachedLinesLength; index as index">
-            {{index + 1}}
-          </span>
-        </div>
-        <code-node [node]="rootNode"></code-node>
-      </div>    
-    </div>              
+    <app-editor-view  (codeUpdate)="onCodeUpdate($event)"
+                      (viewChange)="onEditorViewChange($event)"
+                      [initialCode]="initialCode"
+                      [rootNode]="editorRootNode"
+                      [codeSelection]="codeSelection">
+    </app-editor-view>            
   </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'nodes'">
-    <div class="tree__toolbar panel__toolbar">
-      <span class="tree__lbl">Abstract Syntax Tree (AST)</span>
-      <label class="tree__checkbox-lbl">
-        Extended
-        <input type="checkbox"
-              class="tree__checkbox-ctrl"
-              [(ngModel)]="extended" 
-              (change)="onExtendedChange($event)"> 
-        <span class="tree__checkbox-fake"></span>
-      </label>
-    </div>
-
-    <div class="tree-wrapper p-0 monaco-scroll" #treeWrapper>
-      <tree [tree]="nodes"
-            #tree
-            (nodeSelected)="onNodeClick($event)"
-            (nodeHovered)="logEvent($event)"></tree>
+    <app-ast-view (nodeHover)="onASTNodeHover($event)"
+                  (nodeClick)="onASTNodeClick($event)"
+                  [extended]="extended"
+                  [treeSwitchEnabled]="treeSwitchEnabled"
+                  (extendedChange)="onExtendedChange($event)"
+                  [rootNode]="astRootNode">
+    </app-ast-view>
+    <div class="message" [class.message--active]="isMessageActive">
+      <p>Switch to Editor View</p>
     </div>
   </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'props'">
-    <div class="tree__toolbar panel__toolbar">
-      <span class="tree__lbl">Property Inspector</span>
-    </div>
-
-    <div class="tree-wrapper p-0 monaco-scroll" #treeWrapper>
-      <tree [tree]="propsTree"
-        *ngIf="propsTree else placeholder"
-        class="prop-tree">
-        <ng-template let-node>
-          <span class="prop-key">{{node.data?.key}}:</span>
-          <span class="prop-value" [ngClass]="'prop-value--' + node.data?.type">
-            {{node.data?.propValue}}</span>
-          <span *ngIf="node.data?.kind" class="prop-kind" [ngClass]="'prop-kind--' + node.data?.type">
-            <ng-container *ngIf="node.data?.propValue">-</ng-container> {{node.data?.kind}}</span>
-        </ng-template>
-      </tree>
-    </div>
-
-    <ng-template #placeholder>
-      <p class="placeholder">
-        Click on any node in the "Abstract Syntax Tree (AST)" panel to view its properties.
-      </p>
-    </ng-template>
+    <app-detail-view [node]="detailNode"></app-detail-view>
   </div>
 </div>
-
-<ng-template #propNode let-node>
-
-</ng-template>

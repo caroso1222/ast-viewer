@@ -1,27 +1,27 @@
-import { Ng2TreeSettings } from './../shared/tree/tree.types';
+import { CodeSelection } from 'shared/models/code-selection';
+import { Ng2TreeSettings } from 'shared/tree/tree.types';
 import { AppService } from './app.service';
 import {
   Component,
   OnInit,
   ViewChild,
-  AfterViewInit,
   ElementRef
 } from '@angular/core';
 import * as ts from 'typescript';
 
-const BLACKLIST = ['parent', '_children'];
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, AfterViewInit {
-  title = 'app';
+export class AppComponent implements OnInit {
   nodes = {};
-  code = '';
+
+
   @ViewChild('tree')
   tree;
+
   extended = true;
 
   activePanel: 'editor' | 'nodes' | 'props' = 'editor';
@@ -36,33 +36,34 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   nodeList = [];
   counter = 1;
-  editorOptions = {
-    theme: 'vs-dark',
-    language: 'typescript',
-    minimap: { enabled: false }
-  };
 
   selectedNode: any = {};
 
-  cachedLinesLength = [];
+  astRootNode;
 
-  editor;
+  editorRootNode;
 
-  decorations = [];
+  detailNode;
 
-  rootNode;
+  isEditorViewActive = true;
 
-  monacoActive = true;
+  codeSelection: CodeSelection;
 
-  propsTree;
+  initialCode;
+
+  code;
+
+  extendedRootNode;
+
+  collapsedRootNode;
+
+  treeSwitchEnabled = true;
 
   constructor(private appService: AppService) { }
 
   ngOnInit() {
-    this.appService.setTree(this.tree);
-    this.appService.setTreeContainer(this.treeWrapper);
-    this.code =
-`import { Component, OnInit } from '@angular/core';
+    this.initialCode =
+`import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'my-app',
@@ -81,21 +82,21 @@ export class AppComponent implements OnInit {
   }
 }
 `;
-    this.initTree(this.code);
+    this.appService.setTree(this.tree);
+    this.appService.setTreeContainer(this.treeWrapper);
+
+    this.onCodeUpdate(this.initialCode);
   }
 
-  ngAfterViewInit() {
-  }
-
-  visit(node: ts.Node): ASTNode {
+  visit(node: ts.Node, extended: boolean): ASTNode {
     const children = [];
-    if (this.extended) {
+    if (extended) {
       node.getChildren().forEach(_node => {
-        children.push(this.visit(_node));
+        children.push(this.visit(_node, extended));
       });
     } else {
       ts.forEachChild(node, _node => {
-        children.push(this.visit(_node));
+        children.push(this.visit(_node, extended));
       });
     }
     this.nodeList.push(node);
@@ -120,140 +121,64 @@ export class AppComponent implements OnInit {
     return obj;
   }
 
-  initTree(code) {
+  onCodeUpdate(code: string) {
+    this.code = code;
+    this.extendedRootNode = this.getRootFromCode(code, true);
+    this.editorRootNode = this.extendedRootNode;
+    if (this.extended) {
+      this.astRootNode = this.extendedRootNode;
+      // now invalidate the current collapsed tree
+      this.collapsedRootNode = undefined;
+    } else {
+      this.astRootNode = this.getRootFromCode(code, false);
+      this.collapsedRootNode = this.astRootNode;
+    }
+  }
+
+  private getRootFromCode(code: string, extended: boolean) {
+    console.log('calculating');
     const a = ts.createSourceFile('_.ts', code, ts.ScriptTarget.Latest, true);
-    this.nodes = this.visit(a);
-    this.rootNode = this.nodes;
-    this.cacheLines(code);
+    return this.visit(a, extended);
   }
 
-  cacheLines(code) {
-    this.cachedLinesLength = code.split('\n').map(l => l.length + 1);
-  }
-
-  logEvent(evt) {
+  onASTNodeHover(evt) {
     this.selectedNode = this.nodeList[evt.node.id - 1];
-    this.createSelection(this.selectedNode.pos, this.selectedNode.end);
+    this.codeSelection = {
+      startPos: this.selectedNode.pos,
+      endPos: this.selectedNode.end
+    };
   }
 
-  onNodeClick(evt) {
-    if (this.monacoActive) {
-      const node = evt.node.node.tsNode as ts.Node;
-      const children = this.visitPropNode(node);
-      const root: any = {
-        settings: {
-          rightMenu: false,
-          static: true,
-          cssClasses: {
-            'expanded': 'fa fa-caret-down fa-white',
-            'collapsed': 'fa fa-caret-right fa-white',
-            'leaf': 'fa fa-circle fa-white',
-            'empty': 'fa fa-caret-right disabled fa-white'
-          }
-        },
-        data: {
-          key: ts.SyntaxKind[this.selectedNode.kind],
-          kind: node.constructor.name
-        }
-      };
-      if (children.length) {
-        root.children = children;
-      }
-      this.propsTree = root;
-      return root;
+  onASTNodeClick(evt) {
+    const isClickEvt =  evt.node._evt.type === 'click';
+    // This allow us to ignore hover events on the editor to show the props in the prop viewer
+    if (this.isEditorViewActive || isClickEvt) {
+      this.detailNode = evt.node.node.tsNode as ts.Node;
     }
   }
 
-
-  visitPropNode(node): any {
-    const keys = Object.keys(node)
-      .filter(key => BLACKLIST.indexOf(key) === -1);
-    const children = [];
-    for (const key of keys) {
-      let propValue = node[key];
-      const newObj: any = {
-        settings: {
-          rightMenu: false,
-          static: true,
-          cssClasses: {
-            'expanded': 'fa fa-caret-down fa-white',
-            'collapsed': 'fa fa-caret-right fa-white',
-            'leaf': 'fa fa-circle fa-white',
-            'empty': 'fa fa-caret-right disabled fa-white'
-          }
-        },
-        data: { key }
-      };
-      if (typeof propValue === 'object') {
-        newObj.data.kind = propValue.constructor.name;
-        if (propValue.length) {
-          newObj.data.kind = `Array(${propValue.length})`;
-          newObj.data.type = 'array';
-        }
-        if (!isNaN(key as any)) {
-          newObj.data.kind = ts.SyntaxKind[propValue.kind];
-        }
-        children.push(newObj);
-        const _children = this.visitPropNode(propValue);
-        if (_children.length) {
-          newObj.children = _children;
-        }
-      } else {
-        if (propValue) {
-          newObj.data.type = typeof propValue;
-          if (typeof propValue === 'string') {
-            propValue = `'${propValue}'`;
-          }
-          if (key === 'kind') {
-            newObj.data.kind = ts.SyntaxKind[propValue];
-          }
-          newObj.data.propValue = propValue;
-          children.push(newObj);
-        }
-      }
+  onEditorViewChange(isEditorViewActive) {
+    this.isEditorViewActive = isEditorViewActive;
+    if (!this.isEditorViewActive) {
+      // set the extended to true and the ast to extended
+      this.onExtendedChange(true);
     }
-    return children;
+    this.treeSwitchEnabled = this.isEditorViewActive;
   }
+
 
   onExtendedChange(evt) {
-    this.initTree(this.code);
-  }
-
-  createSelection(start, end) {
-    const [initRow, initCol] = this.getLineCol(start);
-    const [endRow, endCol] = this.getLineCol(end);
-    this.selectText(initRow, initCol, endRow, endCol);
-  }
-
-  getLineCol(pos) {
-    for (let i = 0; i < this.cachedLinesLength.length; i++) {
-      if (this.cachedLinesLength[i] > pos) {
-        return [i + 1, pos + 1];
+    this.extended = evt;
+    if (this.extended) {
+      this.astRootNode = this.extendedRootNode;
+    } else {
+      // if there's no collapsed tree yet, then compute it
+      if (!this.collapsedRootNode) {
+        this.collapsedRootNode = this.getRootFromCode(this.code, false);
       }
-      pos -= this.cachedLinesLength[i];
+      this.astRootNode = this.collapsedRootNode;
     }
   }
-
-  onEditorInit(editor: any) {
-    this.editor = editor;
-    (window as any).monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-      noSemanticValidation: true,
-      noSyntaxValidation: true
-    });
-  }
-
-  selectText(initRow, initCol, endRow, endCol) {
-    this.decorations = this.editor.deltaDecorations(this.decorations, [
-      {
-        range: new (window as any).monaco.Range(initRow, initCol, endRow, endCol),
-        options: {
-          inlineClassName: 'myInlineDecoration'
-        }
-      },
-    ]);
-  }
-
-
 }
 
 export interface ASTNode {
@@ -263,5 +188,3 @@ export interface ASTNode {
   settings: any;
   tsNode: ts.Node;
 }
-
-// http://mbostock.github.io/d3/talk/20110921/#21

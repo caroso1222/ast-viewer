@@ -1,0 +1,30 @@
+.prop-key {
+  color:#d4d4d4;
+}
+
+.prop-value {
+  &--number {
+    color: #b5cea8;
+  }
+  &--string {
+    color: #ce9178; 
+  }
+}
+
+.prop-kind {
+  color:#d4d4d4;
+  opacity: 0.5;
+  &--array {
+    color: #569cd6;
+    opacity: 1;
+  }
+}
+
+.placeholder {
+  color:#cbcbcb;
+  font-size: 12px;
+  font-family: Menlo, Monaco, "Courier New", monospace;
+  padding: 12px;
+  margin: 0;
+  line-height: 20px;
+}

@@ -1,0 +1,30 @@
+<div class="editors">
+  <div class="editors__toolbar panel__toolbar">
+    <span class="editors__lbl editors__lbl--editor"
+          *ngIf="isEditorEnabled">Editor View</span>
+    <span class="editors__lbl editors__lbl--inspector"
+          *ngIf="!isEditorEnabled">Inspector View</span>
+    <button (click)="switchView()"
+            class="editors__switcher">
+      <ng-container *ngIf="isEditorEnabled">Switch to Inspector View</ng-container>
+      <ng-container *ngIf="!isEditorEnabled">Switch to Editor View</ng-container>
+    </button>
+  </div>
+  <ngx-monaco-editor [options]="editorOptions"
+                      class="monaco-editor"
+                      *ngIf="isEditorEnabled"
+                      class="editors__monaco"
+                    (ngModelChange)="onCodeUpdate($event)"
+                    (onInit)="onEditorInit($event)"
+                    [(ngModel)]="code"></ngx-monaco-editor>
+  
+  <div class="interactive-wrapper editors__fake"
+        *ngIf="!isEditorEnabled">
+    <div class="code-numbers">
+      <span class="code-number" *ngFor="let num of cachedLinesLength; index as index">
+        {{index + 1}}
+      </span>
+    </div>
+    <code-node [node]="rootNode"></code-node>
+  </div>    
+</div>  

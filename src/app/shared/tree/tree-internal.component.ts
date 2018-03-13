@@ -190,6 +190,7 @@ export class TreeInternalComponent implements OnInit, OnChanges, OnDestroy, Afte
 
     if (EventUtils.isLeftButtonClicked(e as MouseEvent)) {
       this.isSelected = true;
+      this.tree['_evt'] = e;
       this.treeService.fireNodeSelected(this.tree);
     }
   }

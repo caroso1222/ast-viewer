@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs/Subject';
 import {
   Component,
   OnInit,
@@ -6,6 +7,7 @@ import {
   Input
 } from '@angular/core';
 import { CodeSelection } from 'shared/models/code-selection';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-editor-view',
@@ -71,6 +73,11 @@ export class EditorViewComponent implements OnInit {
   rootNode;
 
   /**
+   * Stream of code updation events
+   */
+  private codeUpdate$: Subject<string> = new Subject();
+
+  /**
    * Represents a code snippet selection given its startPos and endPos
    */
   @Input()
@@ -85,6 +92,14 @@ export class EditorViewComponent implements OnInit {
   ngOnInit() {
     this.code = this.initialCode;
     this.cacheLines(this.code);
+    this.codeUpdate$
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe(code => {
+        this.codeUpdate.next(code);
+      });
   }
 
   /**
@@ -126,7 +141,7 @@ export class EditorViewComponent implements OnInit {
    */
   onCodeUpdate(code: string) {
     this.cacheLines(code);
-    this.codeUpdate.next(code);
+    this.codeUpdate$.next(code);
   }
 
   /**

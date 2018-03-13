@@ -1,5 +1,5 @@
 import { CodeSelection } from 'shared/models/code-selection';
-import { Ng2TreeSettings } from './../shared/tree/tree.types';
+import { Ng2TreeSettings } from 'shared/tree/tree.types';
 import { AppService } from './app.service';
 import {
   Component,

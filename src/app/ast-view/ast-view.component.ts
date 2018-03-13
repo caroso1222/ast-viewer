@@ -3,15 +3,31 @@ import {
   OnInit,
   Output,
   Input,
-  EventEmitter
+  EventEmitter,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
+import { AppService } from '../app.service';
+import { TreeComponent } from 'shared/tree/tree.component';
 
 @Component({
   selector: 'app-ast-view',
   templateUrl: './ast-view.component.html',
   styleUrls: ['./ast-view.component.scss']
 })
-export class AstViewComponent {
+export class AstViewComponent implements OnInit {
+
+  /**
+   * Reference to the tree component
+   */
+  @ViewChild('tree')
+  tree: TreeComponent;
+
+  /**
+   * Element ref to the tree container
+   */
+  @ViewChild('treeWrapper')
+  treeWrapper: ElementRef;
 
   /**
    * Whether or not the extended view is enabled
@@ -41,6 +57,13 @@ export class AstViewComponent {
    */
   @Output()
   nodeClick: EventEmitter<any> = new EventEmitter();
+
+  constructor(private appService: AppService) {}
+
+  ngOnInit() {
+    this.appService.setTree(this.tree);
+    this.appService.setTreeContainer(this.treeWrapper);
+  }
 
   /**
    * Callback fired when extended checkbox changes

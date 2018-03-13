@@ -53,6 +53,12 @@ export class EditorViewComponent implements OnInit {
   codeUpdate: EventEmitter<string> = new EventEmitter();
 
   /**
+   * Event emitted when there's a change from Inspector to Editor view
+   */
+  @Output()
+  viewChange: EventEmitter<boolean> = new EventEmitter();
+
+  /**
    * Code to render in component init
    */
   @Input()
@@ -166,6 +172,14 @@ export class EditorViewComponent implements OnInit {
    */
   cacheLines(code: string) {
     this.cachedLinesLength = code.split('\n').map(l => l.length + 1);
+  }
+
+  /**
+   * Switch between editor and inspector view
+   */
+  switchView() {
+    this.isEditorEnabled = !this.isEditorEnabled;
+    this.viewChange.next(this.isEditorEnabled);
   }
 
 }

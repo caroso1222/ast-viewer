@@ -39,17 +39,25 @@ export class AppComponent implements OnInit {
 
   selectedNode: any = {};
 
-  rootNode;
+  astRootNode;
+
+  editorRootNode;
 
   detailNode;
 
-  monacoActive = true;
+  isEditorViewActive = true;
 
   codeSelection: CodeSelection;
 
   initialCode;
 
   code;
+
+  extendedRootNode;
+
+  collapsedRootNode;
+
+  treeSwitchEnabled = true;
 
   constructor(private appService: AppService) { }
 
@@ -80,15 +88,15 @@ export class AppComponent implements OnInit {
     this.onCodeUpdate(this.initialCode);
   }
 
-  visit(node: ts.Node): ASTNode {
+  visit(node: ts.Node, extended: boolean): ASTNode {
     const children = [];
-    if (this.extended) {
+    if (extended) {
       node.getChildren().forEach(_node => {
-        children.push(this.visit(_node));
+        children.push(this.visit(_node, extended));
       });
     } else {
       ts.forEachChild(node, _node => {
-        children.push(this.visit(_node));
+        children.push(this.visit(_node, extended));
       });
     }
     this.nodeList.push(node);
@@ -115,9 +123,22 @@ export class AppComponent implements OnInit {
 
   onCodeUpdate(code: string) {
     this.code = code;
+    this.extendedRootNode = this.getRootFromCode(code, true);
+    this.editorRootNode = this.extendedRootNode;
+    if (this.extended) {
+      this.astRootNode = this.extendedRootNode;
+      // now invalidate the current collapsed tree
+      this.collapsedRootNode = undefined;
+    } else {
+      this.astRootNode = this.getRootFromCode(code, false);
+      this.collapsedRootNode = this.astRootNode;
+    }
+  }
+
+  private getRootFromCode(code: string, extended: boolean) {
+    console.log('calculating');
     const a = ts.createSourceFile('_.ts', code, ts.ScriptTarget.Latest, true);
-    this.nodes = this.visit(a);
-    this.rootNode = this.nodes;
+    return this.visit(a, extended);
   }
 
   onASTNodeHover(evt) {
@@ -129,15 +150,34 @@ export class AppComponent implements OnInit {
   }
 
   onASTNodeClick(evt) {
-    if (this.monacoActive) {
+    const isClickEvt =  evt.node._evt.type === 'click';
+    // This allow us to ignore hover events on the editor to show the props in the prop viewer
+    if (this.isEditorViewActive || isClickEvt) {
       this.detailNode = evt.node.node.tsNode as ts.Node;
     }
+  }
+
+  onEditorViewChange(isEditorViewActive) {
+    this.isEditorViewActive = isEditorViewActive;
+    if (!this.isEditorViewActive) {
+      // set the extended to true and the ast to extended
+      this.onExtendedChange(true);
+    }
+    this.treeSwitchEnabled = this.isEditorViewActive;
   }
 
 
   onExtendedChange(evt) {
     this.extended = evt;
-    this.onCodeUpdate(this.code);
+    if (this.extended) {
+      this.astRootNode = this.extendedRootNode;
+    } else {
+      // if there's no collapsed tree yet, then compute it
+      if (!this.collapsedRootNode) {
+        this.collapsedRootNode = this.getRootFromCode(this.code, false);
+      }
+      this.astRootNode = this.collapsedRootNode;
+    }
   }
 }
 
@@ -148,5 +188,3 @@ export interface ASTNode {
   settings: any;
   tsNode: ts.Node;
 }
-
-// http://mbostock.github.io/d3/talk/20110921/#21

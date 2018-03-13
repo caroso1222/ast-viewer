@@ -1,10 +1,11 @@
 <div class="tree__toolbar panel__toolbar">
   <span class="tree__lbl">Abstract Syntax Tree (AST)</span>
-  <label class="tree__checkbox-lbl">
+  <label class="tree__checkbox-lbl" [class.tree__checkbox-lbl--disabled]="!treeSwitchEnabled">
     Extended
     <input type="checkbox"
           class="tree__checkbox-ctrl"
           [(ngModel)]="extended" 
+          [disabled]="!treeSwitchEnabled"
           (change)="onExtendedChange()"> 
     <span class="tree__checkbox-fake"></span>
   </label>

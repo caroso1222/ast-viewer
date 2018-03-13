@@ -32,7 +32,14 @@ export class AstViewComponent implements OnInit {
   /**
    * Whether or not the extended view is enabled
    */
+  @Input()
   extended = true;
+
+  /**
+   * Whether or not the tree switcher (extended/collapsed) is enabled
+   */
+  @Input()
+  treeSwitchEnabled = true;
 
   /**
    * Event emitted when the extended checkbox mutates

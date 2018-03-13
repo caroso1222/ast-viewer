@@ -4,7 +4,7 @@
           *ngIf="isEditorEnabled">Editor View</span>
     <span class="editors__lbl editors__lbl--inspector"
           *ngIf="!isEditorEnabled">Inspector View</span>
-    <button (click)="isEditorEnabled = !isEditorEnabled"
+    <button (click)="switchView()"
             class="editors__switcher">
       <ng-container *ngIf="isEditorEnabled">Switch to Inspector View</ng-container>
       <ng-container *ngIf="!isEditorEnabled">Switch to Editor View</ng-container>

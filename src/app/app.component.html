@@ -36,9 +36,6 @@
                   (extendedChange)="onExtendedChange($event)"
                   [rootNode]="astRootNode">
     </app-ast-view>
-    <div class="message" [class.message--active]="isMessageActive">
-      <p>Switch to Editor View</p>
-    </div>
   </div>
   <div class="col-sm-4 col-xs-12 p-0 panel" [class.panel--active]="activePanel === 'props'">
     <app-detail-view [node]="detailNode"></app-detail-view>

@@ -136,7 +136,6 @@ export class AppComponent implements OnInit {
   }
 
   private getRootFromCode(code: string, extended: boolean) {
-    console.log('calculating');
     const a = ts.createSourceFile('_.ts', code, ts.ScriptTarget.Latest, true);
     return this.visit(a, extended);
   }

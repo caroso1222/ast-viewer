@@ -108,10 +108,10 @@ export class AppComponent implements OnInit {
         rightMenu: false,
         static: true,
         cssClasses: {
-          'expanded': 'fa fa-caret-down fa-white',
-          'collapsed': 'fa fa-caret-right fa-white',
-          'leaf': 'fa fa-circle fa-white',
-          'empty': 'fa fa-caret-right disabled fa-white'
+          'expanded': 'fas fa-caret-down fa-white',
+          'collapsed': 'fas fa-caret-right fa-white',
+          'leaf': 'fas fa-circle fa-white',
+          'empty': 'fas fa-caret-right disabled fa-white'
         }
       }
     };

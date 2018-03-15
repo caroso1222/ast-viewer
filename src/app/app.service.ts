@@ -1,4 +1,7 @@
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
+
 
 @Injectable()
 export class AppService {
@@ -7,7 +10,29 @@ export class AppService {
 
   private treeContainer;
 
-  constructor() { }
+  private nodeSelected$: Subject<number> = new Subject();
+
+  constructor() {
+    this.nodeSelected$
+      .pipe(
+        debounceTime(150),
+        distinctUntilChanged()
+      )
+      .subscribe(id => {
+        const oopNodeController = this.tree.getControllerByNodeId(id);
+
+        if (oopNodeController) {
+          oopNodeController.select();
+          const el = oopNodeController.component.nodeElementRef.nativeElement;
+          const offsetTop = el.offsetTop;
+          this.scrollTo(
+            this.treeContainer.nativeElement,
+            offsetTop - 200,
+            150
+          );
+        }
+      });
+  }
 
   setTree(tree) {
     this.tree = tree;
@@ -18,18 +43,7 @@ export class AppService {
   }
 
   selectNode(id) {
-    const oopNodeController = this.tree.getControllerByNodeId(id);
-
-    if (oopNodeController) {
-      oopNodeController.select();
-      const el = oopNodeController.component.nodeElementRef.nativeElement;
-      const offsetTop = el.offsetTop;
-      this.scrollTo(
-        this.treeContainer.nativeElement,
-        offsetTop - 200,
-        150
-      );
-    }
+    this.nodeSelected$.next(id);
   }
 
   scrollTo(element, to, duration) {

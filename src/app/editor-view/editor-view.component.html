@@ -6,7 +6,7 @@
           *ngIf="!isEditorEnabled">Inspector View</span>
     <button (click)="switchView()"
             class="editors__switcher">
-      <ng-container *ngIf="isEditorEnabled">Switch to Inspector View</ng-container>
+      <ng-container *ngIf="isEditorEnabled">Switch to Inspector View (Beta <i class="fas fa-flask"></i>)</ng-container>
       <ng-container *ngIf="!isEditorEnabled">Switch to Editor View</ng-container>
     </button>
   </div>

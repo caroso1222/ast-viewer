@@ -11,6 +11,9 @@
   &__monaco, &__fake {
     flex: 1;
   }
+  &__fake {
+    overflow: auto;
+  }
   &__toolbar {
     background: #1e1e1e;
     border-bottom: 1px solid #404040;

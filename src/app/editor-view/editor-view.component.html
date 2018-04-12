@@ -3,7 +3,7 @@
     <span class="editors__lbl editors__lbl--editor"
           *ngIf="isEditorEnabled">Editor View</span>
     <span class="editors__lbl editors__lbl--inspector"
-          *ngIf="!isEditorEnabled">Inspector View</span>
+          *ngIf="!isEditorEnabled">Inspector View (Hover over the code)</span>
     <button (click)="switchView()"
             class="editors__switcher">
       <ng-container *ngIf="isEditorEnabled">Switch to Inspector View (Beta <i class="fas fa-flask"></i>)</ng-container>

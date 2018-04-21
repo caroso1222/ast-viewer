@@ -3,12 +3,17 @@
 }
 
 .prop-value {
+  margin-left: -7px;
   &--number {
     color: #b5cea8;
   }
   &--string {
     color: #ce9178; 
   }
+}
+
+.prop-colon {
+  color: #d4d4d4;
 }
 
 .prop-kind {

@@ -7,13 +7,15 @@
     *ngIf="node else placeholder"
     class="prop-tree">
     <ng-template let-node>
-      <span class="prop-key">{{node.data?.key}}:</span>
-      <span class="prop-value" [ngClass]="'prop-value--' + node.data?.type">
-        {{node.data?.propValue}}</span>
+      <span class="prop-key">{{node.data?.key}}</span>
+      <span class="prop-value"
+            *ngIf="node.data?.propValue"
+            [ngClass]="'prop-value--' + node.data?.type">
+        <span class="prop-colon">:</span> {{ node.data?.propValue }}</span>
       <span *ngIf="node.data?.kind"
             class="prop-kind"
             [ngClass]="'prop-kind--' + node.data?.type">
-        <ng-container *ngIf="node.data?.propValue">-</ng-container> {{node.data?.kind}}
+        <ng-container *ngIf="node.data?.propValue || node.data?.kind">-</ng-container> {{node.data?.kind}}
       </span>
     </ng-template>
   </tree>

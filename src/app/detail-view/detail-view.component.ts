@@ -48,8 +48,7 @@ export class DetailViewComponent {
           cssClasses: TREE_CSS_CLASSES
         },
         data: {
-          key: ts.SyntaxKind[node.kind],
-          kind: node.constructor.name
+          key: ts.SyntaxKind[node.kind]
         }
       };
       if (children.length) {
@@ -74,7 +73,6 @@ export class DetailViewComponent {
     const keys = Object.keys(node)
       .filter(key => BLACKLIST.indexOf(key) === -1);
     const children = [];
-    console.log({keys, node});
     for (const key of keys) {
       let propValue = node[key];
       const newObj: any = {
@@ -86,8 +84,7 @@ export class DetailViewComponent {
         data: { key }
       };
       if (typeof propValue === 'object') {
-        newObj.data.kind = ts.SyntaxKind[propValue.__proto__.kind];
-        console.log(propValue.__proto__.kind);
+
         if (propValue.length) {
           newObj.data.kind = `Array(${propValue.length})`;
           newObj.data.type = 'array';
@@ -113,7 +110,6 @@ export class DetailViewComponent {
           children.push(newObj);
         }
       }
-      console.log(propValue, newObj.data.propValue);
     }
     return children;
   }

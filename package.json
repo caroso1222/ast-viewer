@@ -8,7 +8,8 @@
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "trigger-ci": "git reset HEAD && git commit --allow-empty -m \"chore: trigger CI jobs\" && git push"
   },
   "repository": {
     "type": "git",

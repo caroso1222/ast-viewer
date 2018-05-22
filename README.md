@@ -6,4 +6,4 @@ Live app: [http://ast.carlosroso.com/](http://ast.carlosroso.com/)
 
 ## Contributing
 
-This is an Angular CLI project. Run `ng serve` and visit `localhost:4200`. The project uses the [monaco editor](https://github.com/Microsoft/monaco-editor) to render the code editor.
+This is an Angular CLI project. Install dependencies, run `ng serve` and visit `localhost:4200`. The project uses the [monaco editor](https://github.com/Microsoft/monaco-editor) to render the code editor.
